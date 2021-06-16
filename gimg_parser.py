@@ -15,6 +15,9 @@ def parse_page(html_data, out_folder_name, name_url_part):
     base64_imgs = [ img['src'] for img in html_imgs \
         if (img.has_attr('jsname') and img.has_attr('src')) ][:total_imgs]
 
+    if not os.path.isdir(f'./img_out/'):
+        os.mkdir(f'./img_out/')
+
     for i in range(len(base64_imgs)):
         image = b64str_to_img(base64_imgs[i])
         img_str = image['img_string']
