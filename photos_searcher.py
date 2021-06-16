@@ -26,7 +26,7 @@ if __name__ == '__main__':
 
     for info in dict_to_search:
         if len(info['urls']) > 0:
-            for url in info['urls']:
+            for url in [url for url in info['urls'] if url is not None]:
                 search_text = info['name'] + ' site:' + url
                 driver.follow_link(create_query_link(search_text))
                 html_data = driver.get_page_source()
