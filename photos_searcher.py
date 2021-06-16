@@ -14,7 +14,7 @@ def create_query_link(query_string):
     return link
 
 if __name__ == '__main__':
-    with open('./jsons/authors_infoU1.json', 'r') as f:
+    with open('./jsons/authors_infoU4.json', 'r') as f:
         authors_universities = json.load(f)
 
     dict_to_search = get_dict_to_search(authors_universities)

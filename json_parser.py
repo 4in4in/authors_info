@@ -24,7 +24,7 @@ def get_universities_from_json(file_name): # получение словаря �
     with open(file_name, 'r') as f:
         json_data = json.load(f)
 
-    dicts = json_data[0]['author-retrieval-response-list']['author-retrieval-response']
+    dicts = json_data[3]['author-retrieval-response-list']['author-retrieval-response']
 
     for author_info_dict in tqdm(dicts):
         universities = get_author_universities(author_info_dict)
@@ -37,13 +37,15 @@ def get_dict_to_search(mydata): # получение словаря вида { �
     for info in mydata:
         name = info['name']
         urls = []
-        for url in info['current_university_info']:
-            if url['url'] not in urls and url['url']:
-                urls.append(url['url'])
+        for univ_info in info['current_university_info']:
+            if isinstance(univ_info, dict):
+                if univ_info['url'] and univ_info['url'] not in urls:
+                    urls.append(univ_info['url'])
 
-        for url in info['university_history_info']:
-            if url['url'] not in urls and url['url']:
-                urls.append(url['url'])
+        for univ_info in info['university_history_info']:
+            if isinstance(univ_info, dict):
+                if univ_info['url'] and univ_info['url'] not in urls:
+                    urls.append(univ_info['url'])
 
         results.append({'name': name, 'urls': urls})
     return results
@@ -52,6 +54,11 @@ def save_dict_to_json(dict, file_name):
     with open(f'./jsons/{file_name}.json', 'w') as f:
         json.dump(dict, f, indent=4)
 
+def get_dict_from_json(file_name):
+    with open(f'./jsons/{file_name}.json', 'r') as f:
+        res_dict = json.load(f)
+    return res_dict
+
 if __name__ == '__main__':
     universities_info = get_universities_from_json('./jsons/authors_info.json')
-    save_dict_to_json(universities_info, 'authors_infoU1')
+    save_dict_to_json(universities_info, 'authors_infoU4')
