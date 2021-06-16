@@ -36,12 +36,7 @@ def get_author_universities(raw_json):
 def get_university_info(affiliation):
     university = affiliation['ip-doc']
     name = university['afdispname'] if 'afdispname' in university else 'Name not found'
-    # url = university['org-URL'] if 'org-URL' in university else None
-    # try:
-    site_addr = get_university_site(name)
-    # except:
-    #     site_addr = None
-    url = university['org-URL'] if 'org-URL' in university else site_addr
+    url = university['org-URL'] if 'org-URL' in university else None
     university_info = { 'name': name, 'url': url }
     return university_info
 

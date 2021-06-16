@@ -1,32 +1,11 @@
 
-# создает json формата id статьи -> id авторов
-
 import json
 from parser_university import get_author_universities
 from tqdm import tqdm
 
-def get_authors(file_name): # получение словаря формата {"id статьи": [ "id авторов" ]} из файла со списком статей
-    result_dict = {}
-    with open(file_name, 'r') as f:
-        json_data = json.load(f)
-
-    for article_id in json_data:
-        authors_list = []
-        for author_id in json_data[article_id]:
-            authors_list.append(author_id)
-
-        result_dict[article_id] = authors_list
-
-    return result_dict
-
-def get_universities_from_json(file_name): # получение словаря вида { id автора, имя автора, [университеты автора] }
+def get_universities(data): # получение словаря вида { id автора, имя автора, [университеты автора] }
     results = []
-    with open(file_name, 'r') as f:
-        json_data = json.load(f)
-
-    dicts = json_data[3]['author-retrieval-response-list']['author-retrieval-response']
-
-    for author_info_dict in tqdm(dicts):
+    for author_info_dict in tqdm(data):
         universities = get_author_universities(author_info_dict)
         results.append(universities)
 
@@ -39,12 +18,12 @@ def get_dict_to_search(mydata): # получение словаря вида { �
         urls = []
         for univ_info in info['current_university_info']:
             if isinstance(univ_info, dict):
-                if univ_info['url'] and univ_info['url'] not in urls:
+                if univ_info['url'] not in urls:
                     urls.append(univ_info['url'])
 
         for univ_info in info['university_history_info']:
             if isinstance(univ_info, dict):
-                if univ_info['url'] and univ_info['url'] not in urls:
+                if univ_info['url'] not in urls:
                     urls.append(univ_info['url'])
 
         results.append({'name': name, 'urls': urls})
@@ -55,10 +34,11 @@ def save_dict_to_json(dict, file_name):
         json.dump(dict, f, indent=4)
 
 def get_dict_from_json(file_name):
-    with open(f'./jsons/{file_name}.json', 'r') as f:
+    with open(file_name, 'r') as f:
         res_dict = json.load(f)
     return res_dict
 
 if __name__ == '__main__':
-    universities_info = get_universities_from_json('./jsons/authors_info.json')
+    authors_info = get_dict_from_json('./jsons/authors_info.json')
+    universities_info = get_universities(authors_info[3]['author-retrieval-response-list']['author-retrieval-response'])
     save_dict_to_json(universities_info, 'authors_infoU4')

@@ -1,5 +1,5 @@
 
-# парсинг страницы поиска по изображениям google и сохранение первых 20 картинок
+# парсинг страницы поиска по изображениям google
 
 from typing import Type
 from bs4 import BeautifulSoup
