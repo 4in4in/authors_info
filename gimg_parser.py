@@ -8,6 +8,7 @@ from binascii import Error as binascii_Error
 import os
 
 from face_detection import is_image_contains_face
+from get_info import get_info
 
 def get_images_and_urls(img_tags_list):
     results = []
@@ -16,7 +17,7 @@ def get_images_and_urls(img_tags_list):
         # if img_tag.has_attr('jsname') and img_tag.has_attr('src'):
         img_b64 = img_tag['src']
         url_tags = [tag for tag in img_tag.parent.parent.parent.findAll('a') if tag.has_attr('href')]
-        print(url_tags)
+        # print(url_tags)
         url = [tag['href'] for tag in url_tags][0]
         # url = [x for x in url_tags if (x.has_attr('href') and 'google.com/url' in x['href'])][0]['href']
         results.append({ 'img_b64' : img_b64, 'url' : url })
@@ -49,7 +50,9 @@ def parse_page(html_data, out_folder_name, name_url_part):
             path_to_save_txt = f'./img_out/{out_folder_name}/{str(i)}_{name_url_part}.txt'
             
             save_image_from_b64(path_to_save_img, img_bytes)
-            save_txt_url(path_to_save_txt, url)
+            info = get_info(url)
+            if info:
+                save_txt_url(path_to_save_txt, info)
 
     # for i in range(len(base64_imgs)):
     #     image = b64str_to_img(base64_imgs[i])

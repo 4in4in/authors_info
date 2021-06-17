@@ -5,6 +5,7 @@ import requests
 from tqdm import tqdm
 import time
 import random
+from datetime import date, datetime
 
 from json_parser import get_dict_to_search, save_dict_to_json
 from gimg_parser import parse_page
@@ -25,6 +26,8 @@ def search(search_text):
     parse_page(html_data, info['name'], name_url)
 
 if __name__ == '__main__':
+    print('start: '+str(datetime.now()))
+
     with open('./jsons/authors_infoU5.json', 'r') as f:
         authors_universities = json.load(f)
 
@@ -40,3 +43,4 @@ if __name__ == '__main__':
             print(info['name'], ': empty urls list')
     
     driver.shutdown()
+    print('end: '+str(datetime.now()))
