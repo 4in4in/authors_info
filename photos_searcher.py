@@ -18,7 +18,7 @@ def create_query_link(query_string):
     link = f'https://www.google.com/search?q={query_string.replace(" ", "+")}&tbm=isch'
     return link
 
-def search(search_text):
+def search(search_text, url):
     driver.follow_link(create_query_link(search_text))
     html_data = driver.get_page_source()
     name_url = url.replace('https://','').replace('http://','')
@@ -28,16 +28,24 @@ def search(search_text):
 if __name__ == '__main__':
     print('start: '+str(datetime.now()))
 
-    with open('./jsons/authors_infoU5.json', 'r') as f:
+    with open('./jsons/authors_info_69.json', 'r') as f:
         authors_universities = json.load(f)
 
-    dict_to_search = get_dict_to_search(authors_universities)
+    list_to_search = get_dict_to_search(authors_universities)
 
-    for info in dict_to_search:
-        if len(info['urls']) > 0:
-            for url in [url for url in info['urls'] if url is not None]:
-                search_text = info['name'] + ' site:' + url
-                search(search_text)
+    print(f'Authors total: {len(list_to_search)}')
+
+    for i in range(len(list_to_search)):
+        info = list_to_search[i]
+
+        print(f'Current author: { i + 1 } / { len(list_to_search) } { info["name"]} ')
+
+        if len(urls:=[url for url in info['urls'] if url is not None]) > 0:
+            for j in range(len(urls)):
+                print(f'Searching site: { j+1 } / { len(urls) } { urls[j] }')
+
+                search_text = info['name'] + ' site:' + urls[j]
+                search(search_text, urls[j])
                 time.sleep(random.uniform(2.0, 5.0))
         else:
             print(info['name'], ': empty urls list')
