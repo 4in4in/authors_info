@@ -1,7 +1,6 @@
 from os import error
 import requests
-# from googlesearch import search
-from google_parser import search
+from googlesearch import search
 
 def get_author_raw_data(scopus_id):
     headers = {'Accept':'application/json', 'X-ELS-APIKey': '35179f93ddd439953a50c9d282ef5eb5'}
@@ -37,6 +36,14 @@ def get_university_info(affiliation):
     university = affiliation['ip-doc']
     name = university['afdispname'] if 'afdispname' in university else 'Name not found'
     url = university['org-URL'] if 'org-URL' in university else None
+    # print(list(search(name, stop=1)))
+    if url is None:
+        try:
+            found_urls = search(name, stop=1)
+            # if found_urls:
+            url = list(found_urls)[0]
+        except:
+            url=None
     university_info = { 'name': name, 'url': url }
     return university_info
 

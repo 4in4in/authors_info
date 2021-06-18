@@ -46,7 +46,7 @@ if __name__ == '__main__':
     start_time = datetime.now()
     print(f'start: {start_time}')
 
-    with open('./jsons/authors_info_128.json', 'r') as f:
+    with open('./jsons/authors_info_129.json', 'r') as f:
         authors_universities = json.load(f)
 
     list_to_search = get_dict_to_search(authors_universities)
