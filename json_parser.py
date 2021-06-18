@@ -40,5 +40,5 @@ def get_dict_from_json(file_name):
 
 if __name__ == '__main__':
     authors_info = get_dict_from_json('./jsons/authors_info.json')
-    universities_info = get_universities(authors_info[69]['author-retrieval-response-list']['author-retrieval-response'])
-    save_dict_to_json(universities_info, 'authors_info_69')
+    universities_info = get_universities(authors_info[128]['author-retrieval-response-list']['author-retrieval-response'])
+    save_dict_to_json(universities_info, 'authors_info_128')

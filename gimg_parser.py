@@ -15,6 +15,7 @@ def get_images_and_urls(img_tags_list):
 
     for img_tag in img_tags_list:
         img_b64 = img_tag['src']
+        print(img_b64)
         url_tags = [tag for tag in img_tag.parent.parent.parent.findAll('a') if tag.has_attr('href')]
         url = [tag['href'] for tag in url_tags][0]
         results.append({ 'img_b64' : img_b64, 'url' : url })
@@ -44,7 +45,6 @@ def parse_page(html_data, out_folder_name, name_url_part):
 
             path_to_save_img = f'./img_out/{out_folder_name}/{str(i)}_{name_url_part}.{img_extension}'
             path_to_save_txt = f'./img_out/{out_folder_name}/{str(i)}_{name_url_part}.txt'
-            
             save_image_from_b64(path_to_save_img, img_bytes)
             info = get_info(url)
             if info is not None:

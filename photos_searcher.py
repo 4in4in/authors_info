@@ -28,7 +28,7 @@ def search(search_text, url):
 if __name__ == '__main__':
     print('start: '+str(datetime.now()))
 
-    with open('./jsons/authors_info_69.json', 'r') as f:
+    with open('./jsons/authors_info_128.json', 'r') as f:
         authors_universities = json.load(f)
 
     list_to_search = get_dict_to_search(authors_universities)
