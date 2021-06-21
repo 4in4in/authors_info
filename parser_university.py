@@ -1,6 +1,6 @@
 from os import error
 import requests
-from googlesearch import search
+from ddg1 import ddg_search_with_delay
 
 def get_author_raw_data(scopus_id):
     headers = {'Accept':'application/json', 'X-ELS-APIKey': '35179f93ddd439953a50c9d282ef5eb5'}
@@ -35,15 +35,7 @@ def get_author_universities(raw_json):
 def get_university_info(affiliation):
     university = affiliation['ip-doc']
     name = university['afdispname'] if 'afdispname' in university else 'Name not found'
-    url = university['org-URL'] if 'org-URL' in university else None
-    # print(list(search(name, stop=1)))
-    if url is None:
-        try:
-            found_urls = search(name, stop=1)
-            # if found_urls:
-            url = list(found_urls)[0]
-        except:
-            url=None
+    url = university['org-URL'] if 'org-URL' in university else ddg_search_with_delay(name)[0]
     university_info = { 'name': name, 'url': url }
     return university_info
 
@@ -55,10 +47,5 @@ def get_universities(affiliation_object):
         for affiliation in affiliation_object:
             universities.append(get_university_info(affiliation))
     return universities
-    
 
-def get_university_site(university_name):
-    user_agent = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0'
-    result = search(university_name, num=1, stop=1, pause=5, user_agent=user_agent)
-    return list(result)[0]
 

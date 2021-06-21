@@ -1,5 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class Driver:
@@ -27,3 +30,9 @@ class Driver:
     def shutdown(self):
         self.driver.quit()
         self.driver = None
+
+    def find_element_by_class_name(self, name):
+        return self.driver.find_element_by_class_name(name)
+
+    def wait_element(self, id):
+        WebDriverWait(self.driver, 100).until(EC.presence_of_element_located((By.ID, id)))

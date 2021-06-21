@@ -6,6 +6,7 @@ from tqdm import tqdm
 import time
 import random
 from datetime import date, datetime
+from urllib.parse import urlencode
 
 from json_parser import get_dict_to_search, save_dict_to_json
 from gimg_parser import parse_page
@@ -15,7 +16,8 @@ driver = Driver()
 
 
 def create_query_link(query_string):
-    link = f'https://www.google.com/search?q={query_string.replace(" ", "+")}&tbm=isch'
+    params = {'q': query_string, 'tbm': 'isch'}
+    link = f'https://www.google.com/search?{ urlencode(params) }'
     return link
 
 def search_author(search_text, author_name, url):
@@ -46,7 +48,7 @@ if __name__ == '__main__':
     start_time = datetime.now()
     print(f'start: {start_time}')
 
-    with open('./jsons/authors_info_129.json', 'r') as f:
+    with open('./jsons/authors_info_85.json', 'r') as f:
         authors_universities = json.load(f)
 
     list_to_search = get_dict_to_search(authors_universities)

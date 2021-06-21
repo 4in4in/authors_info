@@ -40,5 +40,9 @@ def get_dict_from_json(file_name):
 
 if __name__ == '__main__':
     authors_info = get_dict_from_json('./jsons/authors_info.json')
-    universities_info = get_universities(authors_info[128]['author-retrieval-response-list']['author-retrieval-response'])
-    save_dict_to_json(universities_info, 'authors_info_129')
+    universities_info = get_universities(authors_info[85]['author-retrieval-response-list']['author-retrieval-response'])
+    save_dict_to_json(universities_info, 'authors_info_85')
+    # for i in range(305):
+    #     universities_info = get_universities(authors_info[i]['author-retrieval-response-list']['author-retrieval-response'])
+    #     save_dict_to_json(universities_info, f'authors_info_{i}')
+    #     print(f'{i+1} of 306')
