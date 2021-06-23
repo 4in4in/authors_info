@@ -1,19 +1,14 @@
 import json
-from os import name
-from urllib import parse
-import requests
-from tqdm import tqdm
 import time
 import random
-from datetime import date, datetime
+from datetime import  datetime
 from urllib.parse import urlencode
 
-from json_parser import get_dict_to_search, save_dict_to_json
-from gimg_parser import parse_page
+from json_parser import JsonParser
+from gimg_parser import GoogleImgParser
 from gecko_driver.driver import Driver
 
 driver = Driver()
-
 
 def create_query_link(query_string):
     params = {'q': query_string, 'tbm': 'isch'}
@@ -25,7 +20,7 @@ def search_author(search_text, author_name, url):
     html_data = driver.get_page_source()
     name_url = url.replace('https://','').replace('http://','')
     name_url = name_url[0:name_url.find('/')]
-    parse_page(html_data, author_name, name_url)
+    GoogleImgParser.parse_page(html_data, author_name, name_url)
 
 def search_all_authors(list_to_search):
     for i in range(len(list_to_search)):
@@ -51,7 +46,7 @@ if __name__ == '__main__':
     with open('./jsons/authors_info_85.json', 'r') as f:
         authors_universities = json.load(f)
 
-    list_to_search = get_dict_to_search(authors_universities)
+    list_to_search = JsonParser.get_dict_to_search(authors_universities)
 
     print(f'Authors total: {len(list_to_search)}')
 
