@@ -1,6 +1,7 @@
 from os import error
 import requests
 from ddg1 import DDGSearch
+from urllib.parse import urlparse
 
 class ParserUniversity:
     @classmethod
@@ -33,7 +34,7 @@ class ParserUniversity:
     def get_university_info(cls, affiliation):
         university = affiliation['ip-doc']
         name = university['afdispname'] if 'afdispname' in university else 'Name not found'
-        url = university['org-URL'] if 'org-URL' in university else DDGSearch.ddg_search_with_delay(name)[0]
+        url = urlparse(university['org-URL']).hostname if 'org-URL' in university else urlparse(DDGSearch.ddg_search_with_delay(name)[0]).hostname
         university_info = { 'name': name, 'url': url }
         return university_info
 

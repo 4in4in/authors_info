@@ -24,15 +24,16 @@ class DDGSearch:
         else:
             html_doc = response.text
             soup = BeautifulSoup(html_doc, 'html.parser').find_all('a', class_='result__url', href=True)
-            links = [ link['href'] for link in soup ]
+            links = [ link['href'] for link in soup if 'duckduckgo.com' not in link['href'] ]
             return links
 
     @classmethod
     def ddg_search_with_delay(cls, query):
-        time.sleep(0.025)
+        time.sleep(0.001)
         return cls.ddg_search(query)
 
 if __name__ == '__main__':
     # results = DDGSearch.ddg_search('васек трубачев')
-    results = DDGSearch.ddg_search_with_delay('методология')
-    print(results[0])
+    for i in range(100):
+        results = DDGSearch.ddg_search_with_delay('Eli Lilly Research Laboratories')[0]
+        print(results)

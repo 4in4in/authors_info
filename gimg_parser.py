@@ -49,11 +49,14 @@ class GoogleImgParser:
                 cls.create_folder_if_not_exist(f'./img_out/{out_folder_name}')
 
                 path_to_save_img = f'./img_out/{out_folder_name}/{img_num}_{name_url_part}.{img_extension}'
-                path_to_save_txt = f'./img_out/{out_folder_name}/{img_num}_{name_url_part}.txt'
+                path_to_save_info = f'./img_out/{out_folder_name}/{img_num}_{name_url_part}'
                 cls.save_image_from_b64(path_to_save_img, img_bytes)
                 info = AuthorInfoParser.get_info(url)
-                if info is not None:
-                    cls.save_info_text(path_to_save_txt, info)
+                if info:
+                    if info['type'] == 'text':
+                        cls.save_info_text(path_to_save_info + '.txt', info['content'])
+                    elif info['type'] == 'pdf':
+                        cls.save_info_pdf(path_to_save_info + '.pdf', info['content'])
 
     @classmethod
     def parse_page(cls, html_data, out_folder_name, name_url_part):
@@ -61,9 +64,18 @@ class GoogleImgParser:
         total_imgs = 1
         html_imgs = cls.get_html_imgs(html_doc.findAll('img'), total_imgs)
         img_objects = cls.get_images_and_urls(html_imgs)
+        links_objects = [el['href'] for el in html_doc.findAll('a') if el.has_attr('href')]
+        links_objects = []
+        social_markers = ['facebook.com', 'instagram.com', 'instagr.am', 'linkedin.com', 'vk.com', 'twitter.com']
+        social_links = [link for link in links_objects if any(substring in link for substring in social_markers)]
+        
 
         for i in range(len(img_objects)):
             cls.process_image(img_objects[i], out_folder_name, name_url_part, i)
+
+        if social_links:
+            links_save_path = f'./img_out/{out_folder_name}/links.txt'
+            cls.save_info_text(links_save_path, str(social_links))
 
     @classmethod
     def b64str_to_img(cls, img_base64str):
@@ -91,6 +103,12 @@ class GoogleImgParser:
         # сохранить найденную информацию о человеке
         with open(path, 'w') as f:
             f.write(info_text)
+
+    @classmethod
+    def save_info_pdf(cls, path, info_pdf):
+        with open(path, 'wb') as f:
+            f.write(info_pdf)
+
 
     @classmethod
     def create_folder_if_not_exist(cls, path):

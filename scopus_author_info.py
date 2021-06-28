@@ -1,18 +1,20 @@
 
 import requests
-import asyncio
+from json_parser import JsonParser
 
-def get_author_info(scopus_id):
-    headers = {'Accept':'application/json', 'X-ELS-APIKey': '35179f93ddd439953a50c9d282ef5eb5'}
-    request = requests.get(f'https://api.elsevier.com/content/author/author_id/{scopus_id}', headers=headers)
-    return request.json()
+class ScopusInfo:
+    
+    @classmethod
+    def get_author_info(cls, scopus_id):
+        headers = {'Accept':'application/json', 'X-ELS-APIKey': '35179f93ddd439953a50c9d282ef5eb5'}
+        request = requests.get(f'https://api.elsevier.com/content/author/author_id/{scopus_id}', headers=headers)
+        info_dict = request.json()
+        author_universities = JsonParser.get_universities(info_dict['author-retrieval-response'])
+        return author_universities
 
-async def main():
-    id = 56681997900
-    loop = asyncio.get_event_loop()
-    future1 = loop.run_in_executor(None, get_author_info, id)
-    response1 = await future1
-    print(response1)
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(main())
+if __name__ == '__main__':
+    id = 57210625799
+    author_info = get_author_info(id)
+    author_universities = JsonParser.get_universities(author_info['author-retrieval-response'])
+    JsonParser.save_dict_to_json(author_universities, str(id))

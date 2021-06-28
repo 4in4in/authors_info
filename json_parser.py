@@ -2,8 +2,11 @@
 import json
 from parser_university import ParserUniversity
 from tqdm import tqdm
+import os
 
 class JsonParser:
+
+    jsons_path = './jsons'
 
     @classmethod
     def get_universities(cls, data): # получение словаря вида { id автора, имя автора, [университеты автора] }
@@ -34,17 +37,30 @@ class JsonParser:
         return results
 
     @classmethod
-    def save_dict_to_json(dict, file_name):
-        with open(f'./jsons/{file_name}.json', 'w') as f:
+    def save_dict_to_json(cls, dict, file_name):
+        with open(f'{ cls.jsons_path }/{ file_name }.json', 'w') as f:
             json.dump(dict, f, indent=4)
 
     @classmethod
-    def get_dict_from_json(file_name):
+    def get_dict_from_json(cls, file_name):
         with open(file_name, 'r') as f:
             res_dict = json.load(f)
         return res_dict
 
+    @classmethod
+    def get_all_jsons(cls):
+        jsons_list = [f for f in os.listdir(cls.jsons_path)\
+            if (os.path.isfile(os.path.join(cls.jsons_path, f)) and f.endswith('.json'))]
+        return jsons_list
+
+
 if __name__ == '__main__':
     authors_info = JsonParser.get_dict_from_json('./jsons/authors_info.json')
-    universities_info = JsonParser.get_universities(authors_info[85]['author-retrieval-response-list']['author-retrieval-response'])
-    JsonParser.save_dict_to_json(universities_info, 'authors_info_85')
+    
+    universities_info = JsonParser.get_universities(authors_info[6]['author-retrieval-response-list']['author-retrieval-response'])
+    
+    JsonParser.save_dict_to_json(universities_info, f'authors_info_{6}')
+
+    # for i in range(20):
+    #     universities_info = JsonParser.get_universities(authors_info[i]['author-retrieval-response-list']['author-retrieval-response'])
+    #     JsonParser.save_dict_to_json(universities_info, f'authors_info_{i}')
